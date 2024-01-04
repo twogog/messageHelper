@@ -18,6 +18,7 @@ bot.on(message("text"), async (ctx) => {
 });
 
 // bot.launch();
-module.exports = async (_, response) => {
+module.exports = async (request, response) => {
+  await bot.handleUpdate(request.body);
   response.send("OK");
 };
