@@ -17,7 +17,7 @@ bot.on(message("text"), async (ctx) => {
   );
 });
 
-bot.launch();
+// bot.launch();
 module.exports = async (_, response) => {
   response.send("OK");
 };
