@@ -1,0 +1,14 @@
+{
+  "name": "messagehelper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "twogog",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^4.15.3"
+  }
+}
