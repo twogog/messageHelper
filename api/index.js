@@ -11,7 +11,7 @@ const openai = new OpenAI({
 
 async function main(voice) {
   const fileName = crypto.randomUUID();
-  const filePath = `/tmp/${fileName}.ogg`;
+  const filePath = `/tmp/${fileName}.mp3`;
   fs.writeFileSync(filePath, voice);
   const transcription = await openai.audio.transcriptions.create({
     file: fs.createReadStream(filePath),
@@ -29,9 +29,9 @@ bot.on(message("text"), async (ctx) => {
   ctx.reply("Скопируйте в чат аудио, чтобы получить его в текстовом формате");
 });
 
-bot.on(message("voice"), async (ctx) => {
+bot.on([message("audio"), message("voice")], async (ctx) => {
   await ctx.telegram
-    .getFileLink(ctx.message.voice.file_id)
+    .getFileLink(ctx.message?.voice?.file_id || ctx.message?.audio?.file_id)
     .then(async (url) => {
       await axios
         .get(url, { responseType: "arraybuffer" })
@@ -39,14 +39,6 @@ bot.on(message("voice"), async (ctx) => {
           ctx.reply(await main(voice.data));
         });
     });
-});
-
-bot.on(message("audio"), async (ctx) => {
-  ctx.telegram.getFileLink(ctx.message.audio.file_id).then((url) => {
-    axios.get(url, { responseType: "arraybuffer" }).then((voice) => {
-      return voice;
-    });
-  });
 });
 
 // bot.launch();
