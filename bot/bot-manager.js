@@ -10,7 +10,7 @@ module.exports = class Bot extends Telegraf {
   }
 
   onWelcome() {
-    this.start((ctx) => ctx.reply("Я создан для обработки аудио сообщений"));
+    this.start((ctx) => ctx.reply("Привет!"));
   }
 
   onText() {
