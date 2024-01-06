@@ -15,9 +15,7 @@ module.exports = class Bot extends Telegraf {
 
   onText() {
     this.on(message("text"), async (ctx) => {
-      ctx.reply(
-        "Скопируйте в чат аудио, чтобы получить его в текстовом формате"
-      );
+      ctx.reply(await this.AiManager.getChatTalk(ctx.message.text));
     });
   }
 
@@ -35,6 +33,17 @@ module.exports = class Bot extends Telegraf {
     });
   }
 
+  onHelp() {
+    this.command("help", (ctx) => {
+      ctx.reply(
+        [
+          "- Скопируйте в чат аудио файл, чтобы получить его текстовую расшифровку",
+          "",
+          "- Введите сообщение, чтобы что-то узнать у чата",
+        ].join("\n")
+      );
+    });
+  }
   startLaunch() {
     this.launch();
   }
