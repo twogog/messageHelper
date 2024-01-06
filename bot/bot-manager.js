@@ -34,7 +34,7 @@ module.exports = class Bot extends Telegraf {
   }
 
   onInfo() {
-    this.command("/info", (ctx) => {
+    this.command("info", (ctx) => {
       ctx.reply(
         [
           "- Скопируйте в чат аудио файл, чтобы получить его текстовую расшифровку",
