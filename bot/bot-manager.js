@@ -34,16 +34,17 @@ module.exports = class Bot extends Telegraf {
   }
 
   onHelp() {
-    this.command("/help", (ctx) => {
+    this.help((ctx) =>
       ctx.reply(
         [
           "- Скопируйте в чат аудио файл, чтобы получить его текстовую расшифровку",
           "",
           "- Введите сообщение, чтобы что-то узнать у чата",
         ].join("\n")
-      );
-    });
+      )
+    );
   }
+
   startLaunch() {
     this.launch();
   }
