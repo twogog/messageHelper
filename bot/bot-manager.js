@@ -1,6 +1,6 @@
 const { Telegraf } = require("telegraf");
 const { message } = require("telegraf/filters");
-const axios = require("axios");
+const axios = require("axios/dist/node/axios.cjs");
 const AiManager = require("./ai-manager");
 import { kv } from "@vercel/kv";
 
