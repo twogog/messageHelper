@@ -2,11 +2,13 @@ const { Telegraf } = require("telegraf");
 const { message } = require("telegraf/filters");
 const axios = require("axios");
 const AiManager = require("./ai-manager");
+import { kv } from "@vercel/kv";
 
 module.exports = class Bot extends Telegraf {
   constructor(token) {
     super(token);
     this.AiManager = new AiManager();
+    this.timeOutMsg = (timeout) => `Нужно подождать еще ${timeout} секунд`;
   }
 
   onWelcome() {
@@ -15,21 +17,29 @@ module.exports = class Bot extends Telegraf {
 
   onText() {
     this.on(message("text"), async (ctx) => {
-      ctx.reply(await this.AiManager.getChatTalk(ctx.message.text));
+      const timeout = await this.__checkTimeOut();
+      timeout && ctx.reply(this.timeOutMsg(timeout));
+      !timeout && ctx.reply(await this.AiManager.getChatTalk(ctx.message.text));
     });
   }
 
   onAudio() {
     this.on([message("audio"), message("voice")], async (ctx) => {
-      await ctx.telegram
-        .getFileLink(ctx.message?.voice?.file_id || ctx.message?.audio?.file_id)
-        .then(async (url) => {
-          await axios
-            .get(url, { responseType: "arraybuffer" })
-            .then(async (audio) => {
-              ctx.reply(await this.AiManager.getTranscription(audio.data));
-            });
-        });
+      const timeout = await this.__checkTimeOut();
+      timeout && ctx.reply(this.timeOutMsg(timeout));
+
+      !timeout &&
+        (await ctx.telegram
+          .getFileLink(
+            ctx.message?.voice?.file_id || ctx.message?.audio?.file_id
+          )
+          .then(async (url) => {
+            await axios
+              .get(url, { responseType: "arraybuffer" })
+              .then(async (audio) => {
+                ctx.reply(await this.AiManager.getTranscription(audio.data));
+              });
+          }));
     });
   }
 
@@ -43,6 +53,15 @@ module.exports = class Bot extends Telegraf {
         ].join("\n")
       );
     });
+  }
+
+  async __checkTimeOut() {
+    let data = await kv.get("timeout_timer");
+    if (!data) {
+      await kv.set("timeout_timer", "25", { ex: 25 });
+      return false;
+    }
+    return data;
   }
 
   startLaunch() {
