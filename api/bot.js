@@ -5,7 +5,7 @@ module.exports = async (request, response) => {
   try {
     await Bot.handleUpdate(request.body);
   } catch (error) {
-    // Telegraf.reply("Something went wrong, try again");
+    Telegraf.reply("На боте установлено ограничение в 200 запросов в день");
     console.log(error);
   } finally {
     response.send("OK");
