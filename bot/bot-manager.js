@@ -56,12 +56,13 @@ module.exports = class Bot extends Telegraf {
   }
 
   async __checkTimeOut() {
-    let data = await kv.get("timeout_timer");
+    const data = await kv.get("timeout_timer");
     if (!data) {
-      await kv.set("timeout_timer", "25", { ex: 25 });
+      await kv.set("timeout_timer", "nevermind", { ex: 25 });
       return false;
     }
-    return data;
+    const time = Math.round((await kv.ttl("timeout_timer")) / 1000);
+    return time;
   }
 
   startLaunch() {
