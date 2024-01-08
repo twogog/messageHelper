@@ -61,7 +61,7 @@ module.exports = class Bot extends Telegraf {
       await kv.set("timeout_timer", "nevermind", { ex: 25 });
       return false;
     }
-    const time = Math.round((await kv.ttl("timeout_timer")) / 1000);
+    const time = await kv.ttl("timeout_timer");
     return time;
   }
 
