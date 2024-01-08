@@ -8,7 +8,6 @@ module.exports = class Bot extends Telegraf {
   constructor(token) {
     super(token);
     this.AiManager = new AiManager();
-    this.timeOutMsg = (timeout) => `Нужно подождать еще ${timeout} секунд`;
   }
 
   onWelcome() {
@@ -18,7 +17,7 @@ module.exports = class Bot extends Telegraf {
   onText() {
     this.on(message("text"), async (ctx) => {
       const timeout = await this.__checkTimeOut();
-      timeout && ctx.reply(this.timeOutMsg(timeout));
+      timeout && ctx.reply(this.__timeOutMsg(timeout));
       !timeout && ctx.reply(await this.AiManager.getChatTalk(ctx.message.text));
     });
   }
@@ -26,7 +25,7 @@ module.exports = class Bot extends Telegraf {
   onAudio() {
     this.on([message("audio"), message("voice")], async (ctx) => {
       const timeout = await this.__checkTimeOut();
-      timeout && ctx.reply(this.timeOutMsg(timeout));
+      timeout && ctx.reply(this.__timeOutMsg(timeout));
 
       !timeout &&
         (await ctx.telegram
@@ -67,5 +66,9 @@ module.exports = class Bot extends Telegraf {
 
   startLaunch() {
     this.launch();
+  }
+
+  __timeOutMsg(timeout) {
+    return `Нужно подождать еще ${timeout} сек.`;
   }
 };
