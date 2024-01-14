@@ -8,6 +8,7 @@ module.exports = class Bot extends Telegraf {
   constructor(token) {
     super(token);
     this.AiManager = new AiManager();
+    this.serverlessLifespan = 10; // in seconds
   }
 
   onWelcome() {
@@ -18,7 +19,13 @@ module.exports = class Bot extends Telegraf {
     this.on(message("text"), async (ctx) => {
       const timeout = await this.__checkTimeOut();
       timeout && ctx.reply(this.__timeOutMsg(timeout));
-      !timeout && ctx.reply(await this.AiManager.getChatTalk(ctx.message.text));
+      // Because serverless has a limited lifespan
+      !timeout &&
+        ctx.reply(
+          await this.AiManager.getChatTalk(
+            this.__addConstrictionPhrase(ctx.message.text)
+          )
+        );
     });
   }
 
@@ -66,6 +73,12 @@ module.exports = class Bot extends Telegraf {
 
   startLaunch() {
     this.launch();
+  }
+
+  __addConstrictionPhrase(chatMsg) {
+    const threshold = Math.abs(this.serverlessLifespan - 3);
+    const phrase = `Ответь за ${threshold} секунд. `;
+    return threshold < 21 ? phrase + chatMsg : chatMsg;
   }
 
   __timeOutMsg(timeout) {
