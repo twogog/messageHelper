@@ -77,7 +77,7 @@ module.exports = class Bot extends Telegraf {
 
   __addConstrictionPhrase(chatMsg) {
     const threshold = Math.abs(this.serverlessLifespan - 3);
-    const phrase = `Ответь за ${threshold} секунд. `;
+    const phrase = `Answer within ${threshold} seconds. `;
     return threshold < 21 ? phrase + chatMsg : chatMsg;
   }
 
