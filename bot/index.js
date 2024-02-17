@@ -1,6 +1,6 @@
-const Bot = require("./bot-manager");
+import Bot from './bot-manager.js';
 
-module.exports = () => {
+export default function () {
   const $Bot = new Bot(process.env.TOKEN);
   $Bot.onWelcome();
   $Bot.onInfo();
@@ -8,4 +8,4 @@ module.exports = () => {
   $Bot.onAudio();
   // $Bot.startLaunch(); // for local tests
   return $Bot;
-};
+}

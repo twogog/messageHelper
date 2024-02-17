@@ -1,7 +1,8 @@
-const Bot = require('../bot/index')();
+import $Bot from '../bot/index.js';
 
-module.exports = async (request, response) => {
+export default async function (request, response) {
   try {
+    const Bot = $Bot();
     await Bot.handleUpdate(request.body);
   } catch (error) {
     Bot.reply('🙈');
@@ -9,4 +10,8 @@ module.exports = async (request, response) => {
   } finally {
     response.send('OK');
   }
+}
+
+export const config = {
+  runtime: 'edge',
 };
