@@ -1,13 +1,12 @@
-const Bot = require("../bot/index")();
-const { Telegraf } = require("telegraf");
+const Bot = require('../bot/index')();
 
 module.exports = async (request, response) => {
   try {
     await Bot.handleUpdate(request.body);
   } catch (error) {
-    Telegraf.reply("На боте установлено ограничение в 200 запросов в день");
+    Bot.reply('🙈');
     console.log(error);
   } finally {
-    response.send("OK");
+    response.send('OK');
   }
 };
