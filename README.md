@@ -1,3 +1,5 @@
+$${\color{red}\large API \space KEY \space HAS \space EXPIRED}$$
+
 ### The OpenAi library was used in the project.
 
 ```
